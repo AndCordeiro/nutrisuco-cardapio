@@ -2,14 +2,28 @@ import { useParams } from "react-router-dom";
 import { categories } from "../data/products";
 import { useCartStore } from "../stores/useCartStore";
 
+type Flavor = string;
+type Size = string | { name: string; hasFlavors: boolean };
+
+type Category = {
+  id: string;
+  name: string;
+  image: string;
+  flavors?: Flavor[];
+  sizes?: Size[];
+};
+
 export function CategoryDetail() {
   const { id } = useParams();
-  const category = categories.find((c) => c.id === id);
+  const category = categories.find((c) => c.id === id) as Category | undefined;
   const addItem = useCartStore((s) => s.addItem);
 
   if (!category) return <p>Categoria não encontrada</p>;
 
-  if (category.id === "picole") {
+  // =====================
+  // PICOLÉ
+  // =====================
+  if (category.id === "picole" && category.flavors) {
     return (
       <div className="p-6">
         <h2 className="text-2xl font-bold mb-4">Sabores de Picolé</h2>
@@ -28,7 +42,7 @@ export function CategoryDetail() {
                     quantity: 1,
                   })
                 }
-                className="mt-2 bg-green-600 text-white rounded px-3 py-1"
+                className="mt-2 bg-green-600 text-white rounded px-3 py-1 hover:bg-green-700 transition"
               >
                 Adicionar
               </button>
@@ -39,72 +53,89 @@ export function CategoryDetail() {
     );
   }
 
-  if (category.id === "sorvete") {
+  // =====================
+  // SORVETE
+  // =====================
+  if (category.id === "sorvete" && category.sizes) {
     return (
       <div className="p-6 space-y-6">
         <h2 className="text-2xl font-bold">Sorvetes</h2>
-        {category.sizes.map((size) => (
-          <div key={size.name} className="bg-white p-4 rounded-lg shadow">
-            <h3 className="font-semibold text-lg mb-2">{size.name}</h3>
-            {size.hasFlavors ? (
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {category.flavors.map((flavor) => (
-                  <div
-                    key={flavor}
-                    className="flex flex-col items-center border rounded p-3"
-                  >
-                    <p className="font-semibold text-lg">{flavor}</p>
-                    <button
-                      onClick={() =>
-                        addItem({
-                          id: `${category.id}-${size.name}-${flavor}`,
-                          name: `Sorvete ${flavor} (${size.name})`,
-                          quantity: 1,
-                        })
-                      }
-                      className="mt-2 bg-green-600 text-white rounded px-3 py-1"
+
+        {category.sizes.map((size) => {
+          const sizeName = typeof size === "string" ? size : size.name;
+          const hasFlavors = typeof size === "object" && size.hasFlavors;
+
+          return (
+            <div key={sizeName} className="bg-white p-4 rounded-lg shadow">
+              <h3 className="font-semibold text-lg mb-2">{sizeName}</h3>
+
+              {hasFlavors && category.flavors ? (
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {category.flavors.map((flavor) => (
+                    <div
+                      key={flavor}
+                      className="flex flex-col items-center border rounded p-3"
                     >
-                      Adicionar
-                    </button>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-gray-600">
-                👉 Consulte sabores disponíveis.
-              </p>
-            )}
-          </div>
-        ))}
+                      <p className="font-semibold text-lg">{flavor}</p>
+                      <button
+                        onClick={() =>
+                          addItem({
+                            id: `${category.id}-${sizeName}-${flavor}`,
+                            name: `Sorvete ${flavor} (${sizeName})`,
+                            quantity: 1,
+                          })
+                        }
+                        className="mt-2 bg-green-600 text-white rounded px-3 py-1 hover:bg-green-700 transition"
+                      >
+                        Adicionar
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-gray-600">
+                  👉 Consulte sabores disponíveis.
+                </p>
+              )}
+            </div>
+          );
+        })}
       </div>
     );
   }
 
-  if (category.id === "acaizinho") {
+  // =====================
+  // AÇAIZINHO
+  // =====================
+  if (category.id === "acaizinho" && category.sizes) {
     return (
       <div className="p-6">
         <h2 className="text-2xl font-bold mb-4">Tamanhos do Açaizinho</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {category.sizes.map((size) => (
-            <div
-              key={size}
-              className="bg-white p-4 rounded-lg shadow text-center"
-            >
-              <p className="font-semibold text-lg">{size}</p>
-              <button
-                onClick={() =>
-                  addItem({
-                    id: `${category.id}-${size}`,
-                    name: `Açaizinho (${size})`,
-                    quantity: 1,
-                  })
-                }
-                className="mt-2 bg-green-600 text-white rounded px-3 py-1"
+          {category.sizes.map((size) => {
+            const sizeName = typeof size === "string" ? size : size.name;
+
+            return (
+              <div
+                key={sizeName}
+                className="bg-white p-4 rounded-lg shadow text-center"
               >
-                Adicionar
-              </button>
-            </div>
-          ))}
+                <p className="font-semibold text-lg">{sizeName}</p>
+                <button
+                  onClick={() =>
+                    addItem({
+                      id: `${category.id}-${sizeName}`,
+                      name: `Açaizinho (${sizeName})`,
+                      quantity: 1,
+                    })
+                  }
+                  className="mt-2 bg-green-600 text-white rounded px-3 py-1 hover:bg-green-700 transition"
+                >
+                  Adicionar
+                </button>
+              </div>
+            );
+          })}
         </div>
       </div>
     );
