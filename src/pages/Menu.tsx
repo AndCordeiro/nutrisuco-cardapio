@@ -5,7 +5,7 @@ export function Menu() {
   const addItem = useCartStore((s) => s.addItem);
 
   return (
-    <div className="p-6 space-y-10">
+    <div className="p-6 space-y-10 pb-20">
       <h1 className="text-3xl font-bold text-purple-700 text-center">
         Todos os Produtos 🍧
       </h1>
@@ -29,32 +29,6 @@ export function Menu() {
             <h2 className="text-xl font-bold text-purple-800 mb-3">
               {category.name}
             </h2>
-
-            {/* ================= PICOLÉ ================= */}
-            {category.id === "picole" && category.flavors && (
-              <div className="space-y-2">
-                {category.flavors.map((flavor) => (
-                  <div
-                    key={`${category.id}-${flavor}`}
-                    className="flex items-center justify-between border-b pb-1"
-                  >
-                    <span>{flavor}</span>
-                    <button
-                      onClick={() =>
-                        addItem({
-                          id: `${category.id}-${flavor}`,
-                          name: `Picolé ${flavor}`,
-                          quantity: 1,
-                        })
-                      }
-                      className="text-sm bg-green-600 text-white rounded px-3 py-1 hover:bg-green-700 transition"
-                    >
-                      Adicionar
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
 
             {/* ================= SORVETE ================= */}
             {category.id === "sorvete" && category.sizes && (
@@ -100,6 +74,32 @@ export function Menu() {
                     </div>
                   );
                 })}
+              </div>
+            )}
+
+            {/* ================= PICOLÉ ================= */}
+            {category.id === "picole" && category.flavors && (
+              <div className="space-y-2">
+                {category.flavors.map((flavor) => (
+                  <div
+                    key={`${category.id}-${flavor}`}
+                    className="flex items-center justify-between border-b pb-1"
+                  >
+                    <span>{flavor}</span>
+                    <button
+                      onClick={() =>
+                        addItem({
+                          id: `${category.id}-${flavor}`,
+                          name: `Picolé ${flavor}`,
+                          quantity: 1,
+                        })
+                      }
+                      className="text-sm bg-green-600 text-white rounded px-3 py-1 hover:bg-green-700 transition"
+                    >
+                      Adicionar
+                    </button>
+                  </div>
+                ))}
               </div>
             )}
 
