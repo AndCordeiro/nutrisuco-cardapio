@@ -3,6 +3,7 @@ import { Header } from "./components/Header";
 import { Home } from "./pages/Home";
 import { CategoryDetail } from "./pages/CategoryDetail";
 import { CartDrawer } from "./components/CartDrawer";
+import { Menu } from "./pages/Menu";
 
 export default function App() {
   return (
@@ -11,6 +12,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/categoria/:id" element={<CategoryDetail />} />
+        <Route path="/menu" element={<Menu />} />
       </Routes>
       <CartDrawer />
     </BrowserRouter>
